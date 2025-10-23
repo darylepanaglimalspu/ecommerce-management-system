@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Our Games<</title>
+</head>
+<body>
+
+    <h1>Welcome to our Store!</h1>
+    <h2>Here are our products:</h2>
+
+    <div>
+        {% for product in products %}
+            <div>
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.description }}</p>
+                <p><strong>Price: ₱{{ product.price }}</strong></p>
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+</body>
+</html>
