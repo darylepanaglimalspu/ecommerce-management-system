@@ -4,10 +4,34 @@
     <meta charset="UTF-8">
     <title>Our Games<</title>
 </head>
-<body>
 
-    <h1>Welcome to our Store!</h1>
-    <h2>Here are our products:</h2>
+<nav style="padding: 10px; background-color: #f0f0f0; margin-bottom: 20px;">"
+{% if user.is_authenticated %}
+
+        <span>Hi, <strong>{{ user.username }}</strong>!</span>
+        <a href="{% url 'store:logout' %}" style="margin-left: 15px;">Logout</a>
+
+    {% else %}
+
+        <a href="{% url 'store:login' %}">Login</a>
+        <a href="{% url 'store:register' %}" style="margin-left: 15px;">Register</a>
+
+    {% endif %}
+
+</nav>
+{% if messages %}
+    <div style="padding: 10px; background-color: #d4edda; color: #155724; margin-bottom: 20px;">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+{% endif %}
+
+
+<h1>Welcome to our Store!</h1>
+<h2>Here are our products:</h2>
+
+<body>
 
     <div>
         {% for product in products %}
