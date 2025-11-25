@@ -5,19 +5,25 @@
     <title>Our Games<</title>
 </head>
 
-<nav style="padding: 10px; background-color: #f0f0f0; margin-bottom: 20px;">"
-{% if user.is_authenticated %}
+<nav style="padding: 15px; background-color: #171a21; color: white; margin-bottom: 20px; font-family: sans-serif;">
 
-        <span>Hi, <strong>{{ user.username }}</strong>!</span>
-        <a href="{% url 'store:logout' %}" style="margin-left: 15px;">Logout</a>
+    <span style="font-size: 20px; font-weight: bold; margin-right: 20px;">PYCRIB</span>
 
-    {% else %}
+    <div style="float: right;">
+        {% if user.is_authenticated %}
+            <span style="color: #c7d5e0;">Welcome, {{ user.username }}</span>
 
-        <a href="{% url 'store:login' %}">Login</a>
-        <a href="{% url 'store:register' %}" style="margin-left: 15px;">Register</a>
+            <a href="#" style="margin-left: 15px; background-color: #5c7e10; color: white; padding: 5px 10px; text-decoration: none; font-weight: bold;">
+                Cart ({{ cart_count }})
+            </a>
 
-    {% endif %}
-
+            <a href="{% url 'store:logout' %}" style="margin-left: 15px; color: #b8b6b4; text-decoration: none;">Logout</a>
+        {% else %}
+            <a href="{% url 'store:login' %}" style="color: white; margin-right: 10px;">Login</a>
+            <a href="{% url 'store:register' %}" style="color: white;">Register</a>
+        {% endif %}
+    </div>
+    <div style="clear: both;"></div>
 </nav>
 {% if messages %}
     <div style="padding: 10px; background-color: #d4edda; color: #155724; margin-bottom: 20px;">
@@ -26,6 +32,12 @@
         {% endfor %}
     </div>
 {% endif %}
+
+
+<form method="GET" action="" style="margin-bottom: 20px;">
+    <input type="text" name="q" placeholder="Search for games..." value="{{ query|default:'' }}">
+    <button type="submit">Search</button>
+</form>
 
 
 <h1>Welcome to our Store!</h1>
@@ -39,6 +51,10 @@
                 <h3>{{ product.name }}</h3>
                 <p>{{ product.description }}</p>
                 <p><strong>Price: ₱{{ product.price }}</strong></p>
+
+                <a href="{% url 'store:add_to_cart' product.id %}" style="background-color:#28a745; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">
+                    Add to Cart
+                </a>
             </div>
             <hr>
         {% endfor %}
