@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Funds</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px; background-color: #1b2838; color: white;">
+
+    <h1>Add Funds to Crib Wallet</h1>
+    <p>Select an amount to purchase:</p>
+
+    <div style="max-width: 600px;">
+
+        {% for amount in amounts %}
+        <form method="POST" style="background-color: #2a475e; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+            {% csrf_token %}
+            <input type="hidden" name="amount" value="{{ amount }}">
+
+            <span style="font-size: 20px; font-weight: bold;">Add ₱{{ amount }}.00</span>
+
+            <button type="submit" style="background-color: #5c7e10; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; border-radius: 2px;">
+                Add Funds
+            </button>
+        </form>
+        {% endfor %}
+
+    </div>
+
+    <br>
+    <a href="{% url 'store:view_profile' %}" style="color: #66c0f4;">Cancel / Back to Profile</a>
+
+</body>
+</html>

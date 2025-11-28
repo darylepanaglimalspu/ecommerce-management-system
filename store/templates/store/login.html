@@ -5,6 +5,13 @@
     <title>Login</title>
 </head>
 <body>
+
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'store:product-list' %}" style="text-decoration: none; color: #555; font-weight: bold;">
+        &larr; Back to Home
+    </a>
+</div>
+
     <h2>Login</h2>
 
     {% if messages %}

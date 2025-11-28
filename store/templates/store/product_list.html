@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Our Games<</title>
+    <title>PYCRIB >Our Games<</title>
 </head>
 
 <nav style="padding: 15px; background-color: #171a21; color: white; margin-bottom: 20px; font-family: sans-serif;">
@@ -11,9 +11,13 @@
 
     <div style="float: right;">
         {% if user.is_authenticated %}
-            <span style="color: #c7d5e0;">Welcome, {{ user.username }}</span>
+            <a href="{% url 'store:view_profile' %}" style="color: #c7d5e0; text-decoration: none; font-weight: bold;">
+                 {{ user.username }} (₱{{ user.userprofile.balance|default:"0.00" }})
+            </a>
 
-            <a href="#" style="margin-left: 15px; background-color: #5c7e10; color: white; padding: 5px 10px; text-decoration: none; font-weight: bold;">
+            <a href="{% url 'store:repository' %}" style="margin-left: 15px; color: #c7d5e0; text-decoration: none;">Repository</a>
+
+            <a href="{% url 'store:cart_detail' %}" style="margin-left: 15px; background-color: #5c7e10; color: white; padding: 5px 10px; text-decoration: none; font-weight: bold;">
                 Cart ({{ cart_count }})
             </a>
 

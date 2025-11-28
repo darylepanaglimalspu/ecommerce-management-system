@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Repository</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px; background-color: #1b2838; color: white;">
+
+    <h1>My Repository</h1>
+    <a href="{% url 'store:product-list' %}" style="color: #66c0f4;">← Back to Store</a>
+    <hr>
+
+    {% if games %}
+        <div style="display: flex; flex-wrap: wrap;">
+            {% for game in games %}
+                <div style="background-color: #2a475e; padding: 15px; margin: 10px; width: 200px; border-radius: 5px;">
+                    <h3>{{ game.name }}</h3>
+                    <button style="background-color: #66c0f4; border: none; padding: 5px 10px; cursor: pointer;">Install</button>
+                    <button style="background-color: #28a745; border: none; padding: 5px 10px; cursor: pointer;">Play</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Your repository is empty. Go buy some games!</p>
+    {% endif %}
+
+</body>
+</html>

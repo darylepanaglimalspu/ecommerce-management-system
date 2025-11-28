@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+
+    <h1>Your Shopping Cart</h1>
+    <a href="{% url 'store:product-list' %}">← Back to Store</a>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="background-color: #eee; padding: 10px; margin: 10px 0;"{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <table border="1" cellpadding="10" style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+        <thread>
+            <tr style="background-color: #171a21; color: white;">
+                <th>Game</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thread>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>
+                    <h3>{{ item.product.name }}</h3>
+                    <p>{{ item.product.description }}</p>
+                </td>
+                <td>₱{{ item.product.price }}</td>
+                <td>
+                    <a href="{% url 'store:remove_from_cart' item.id %}"
+                       oneclick="return confirm('Are you sure you want to remove {{ item.product.name }}?');"
+                       style="color: red; font-weight: bold;">
+                        Remove
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="text-align: center;">Your cart is empty.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3>Total: ₱{{ total_price }}</h3>
+
+    <div style="background-color: #f8f9fa; padding: 15px; border: 1px solid #ddd; margin-bottom: 20px;">
+        <p><strong>Your Wallet Balance:</strong> ₱{{ profile.balance }}</p>
+
+        {% if profile.balance < total_price %}
+            <p style="color: red;">⚠ Insufficient Funds. You need top up.</p>
+            <a href="{% url 'store:top_up_wallet' %}" style="color: blue;">+ Add Funds to Wallet</a>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'store:checkout' %}"
+       onclick="return confirm('Do you want to purchase these games for ₱{{ total_price }}?');"
+       style="padding: 10px 20px; background-color: #28a745; color: white; font-size: 16px; text-decoration: none;">
+        Checkout
+    </a>
+</body>
+</html>

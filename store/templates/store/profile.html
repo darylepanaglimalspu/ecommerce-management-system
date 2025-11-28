@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px; background-color: #1b2838; color: white;">
+
+    <div style="margin-bottom: 30px;">
+        <h1 style="display: inline;">{{ user.username }}'s Profile</h1>
+        <a href="{% url 'store:product-list' %}" style="float: right; color: #66c0f4; text-decoration: none;">← Back to Store</a>
+    </div>
+
+    <div style="background-color: #2a475e; padding: 20px; border-radius: 5px; max-width: 600px;">
+
+        <h2 style="border-bottom: 1px solid #417a9b; padding-bottom: 10px;">Account Details</h2>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Date Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+
+        <br>
+
+        <h2 style="border-bottom: 1px solid #417a9b; padding-bottom: 10px;">Crib Wallet</h2>
+
+        <div style="background-color: #00000050; padding: 15px; border-radius: 3px; margin-bottom: 20px;">
+            <span style="font-size: 14px; color: #8f98a0;">Current Balance:</span><br>
+            <span style="font-size: 32px; color: #66c0f4;">₱{{ profile.balance }}</span>
+        </div>
+
+        <a href="{% url 'store:top_up_wallet' %}" style="background-color: #5c7e10; color: white; padding: 10px 20px; text-decoration: none; border-radius: 2px; font-weight: bold;">
+            + Add Funds to Crib Wallet
+        </a>
+
+        <a href="{% url 'store:logout' %}" style="margin-left: 20px; color: #b8b6b4;">Sign Out</a>
+
+    </div>
+
+</body>
+</html>
