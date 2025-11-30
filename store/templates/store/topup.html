@@ -2,32 +2,136 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Funds</title>
+    <title>PYCRIB | Wallet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- BASE THEME --- */
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-attachment: fixed;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding-bottom: 50px; min-height: 100vh;
+        }
+
+        a { text-decoration: none; transition: all 0.2s ease; }
+
+        /* NAVBAR */
+        nav {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { font-size: 26px; font-weight: 800; letter-spacing: 1px; background: linear-gradient(to right, #c471ed, #f64f59); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-center-pill { background: rgba(255, 255, 255, 0.05); padding: 10px 30px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 25px; }
+        .nav-link-item { color: rgba(255, 255, 255, 0.6); font-weight: 500; font-size: 15px; }
+        .nav-link-item:hover { color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .user-pill { background: rgba(255, 255, 255, 0.08); padding: 5px 15px 5px 5px; border-radius: 50px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: white !important; font-weight: 600;}
+        .user-pill:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(196, 113, 237, 0.5); }
+        .user-pill img { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; object-fit: cover;}
+        .logout-link { color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500;}
+        .logout-link:hover { color: #ff4c4c; }
+
+        /* CONTAINER */
+        .container { max-width: 800px; margin: 40px auto; padding: 20px; }
+
+        /* CURRENT BALANCE CARD */
+        .balance-card {
+            background: linear-gradient(135deg, rgba(40,167,69,0.15), rgba(40,167,69,0.05));
+            border: 1px solid rgba(40,167,69,0.3);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .bal-label { font-size: 14px; text-transform: uppercase; color: #8f98a0; letter-spacing: 2px; font-weight: 600; }
+        .bal-amount { font-size: 64px; font-weight: 800; color: #2ed573; text-shadow: 0 0 30px rgba(46, 213, 115, 0.3); margin-top: 10px; letter-spacing: -2px;}
+
+        h2 { font-weight: 300; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px; }
+
+        /* TOP UP BUTTONS */
+        .topup-grid { display: grid; gap: 15px; }
+        .topup-btn {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1); transition: 0.2s;
+        }
+        .topup-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateX(5px); }
+        .amount-text { font-size: 20px; font-weight: 700; font-family: 'Inter', sans-serif; }
+        .add-btn { background: #5c7e10; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;}
+        .add-btn:hover { background: #6da315; box-shadow: 0 0 20px rgba(92, 126, 16, 0.4); }
+
+        .alert { background: rgba(46, 213, 115, 0.15); border: 1px solid rgba(46, 213, 115, 0.3); color: #2ed573; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; font-weight: 600; }
+
+    </style>
 </head>
-<body style="font-family: sans-serif; padding: 20px; background-color: #1b2838; color: white;">
+<body>
 
-    <h1>Add Funds to Crib Wallet</h1>
-    <p>Select an amount to purchase:</p>
+    <nav>
+        <div class="logo">PYCRIB</div>
+        <div class="nav-center-pill">
+            <a href="{% url 'store:product-list' %}" class="nav-link-item">Games</a>
+            <a href="{% url 'store:repository' %}" class="nav-link-item">Repository</a>
+            <a href="{% url 'store:cart_detail' %}" class="nav-link-item">Cart</a>
+            <a href="{% url 'store:wishlist_view' %}" class="nav-link-item">Wishlist</a>
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'store:view_profile' %}" class="user-pill">
+                {% if user.userprofile.avatar %} <img src="{{ user.userprofile.avatar.url }}"> {% else %} <div style="width: 32px; height: 32px; background: #555; border-radius: 50%; margin-right: 10px;"></div> {% endif %}
+                <span>{{ user.username }} &nbsp; <span style="color: #d4a5ff;">₱{{ user.userprofile.balance|default:"0.00" }}</span></span>
+            </a>
+            <a href="{% url 'store:logout' %}" class="logout-link">Logout</a>
+        </div>
+    </nav>
 
-    <div style="max-width: 600px;">
+    <div class="container">
 
-        {% for amount in amounts %}
-        <form method="POST" style="background-color: #2a475e; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
-            {% csrf_token %}
-            <input type="hidden" name="amount" value="{{ amount }}">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
 
-            <span style="font-size: 20px; font-weight: bold;">Add ₱{{ amount }}.00</span>
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1 style="margin: 0; font-size: 36px; font-weight: 800;">Add Funds</h1>
+            <a href="{% url 'store:view_profile' %}" style="color: rgba(255,255,255,0.5);">← Back to Profile</a>
+        </div>
 
-            <button type="submit" style="background-color: #5c7e10; color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; border-radius: 2px;">
-                Add Funds
-            </button>
-        </form>
-        {% endfor %}
+        <div class="balance-card">
+            <div class="bal-label">Current Wallet Balance</div>
+            <div class="bal-amount">₱{{ user.userprofile.balance|default:"0.00" }}</div>
+        </div>
+
+        <h2>Purchase Amounts</h2>
+        <div class="topup-grid">
+            {% for amount in amounts %}
+            <form method="POST" class="topup-btn">
+                {% csrf_token %}
+                <input type="hidden" name="amount" value="{{ amount }}">
+                <span class="amount-text">₱{{ amount }}.00</span>
+                <button type="submit" class="add-btn">Add Funds</button>
+            </form>
+            {% endfor %}
+        </div>
 
     </div>
 
-    <br>
-    <a href="{% url 'store:view_profile' %}" style="color: #66c0f4;">Cancel / Back to Profile</a>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.style.transition = "opacity 1s ease"; alert.style.opacity = "0";
+                    setTimeout(function() { alert.style.display = "none"; }, 1000);
+                }, 4000);
+            });
+        });
+    </script>
 
 </body>
 </html>

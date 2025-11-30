@@ -6,16 +6,30 @@ from .forms import CustomUserCreationForm
 from .models import Product
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from .models import Product, Cart, CartItem, UserProfile, UserLibrary
-from django.contrib.auth.decorators import login_required
+from .models import Product, Cart, CartItem, UserProfile, UserLibrary, Transaction, Wishlist, Review, StoreBanner, CATEGORY_CHOICES
+from django.db.models import Q
+
 
 def product_list(request):
     query = request.GET.get('q')
+    products = Product.objects.all()
 
     if query:
-        products = Product.objects.filter(name__icontains=query)
-    else:
-        products = Product.objects.all()
+
+        search_category_code = None
+        for code, name in CATEGORY_CHOICES:
+            if query.lower() in name.lower():
+                search_category_code = code
+                break
+
+        products = products.filter(
+            Q(name__icontains=query) |
+            Q(category__icontains=query) |
+            Q(category=search_category_code)
+        )
+
+    banner = StoreBanner.objects.filter(is_active=True).first()
+    featured_game = Product.objects.filter(is_featured=True).first()
 
     cart_count = 0
     if request.user.is_authenticated:
@@ -27,14 +41,18 @@ def product_list(request):
     return render(request, 'store/product_list.html', {
         'products': products,
         'query': query,
-        'cart_count': cart_count
+        'cart_count': cart_count,
+        'banner': banner,
+        'featured_game': featured_game,
+        'categories': CATEGORY_CHOICES
     })
 
 def register_user(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            UserProfile.objects.create(user=user)
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}! You can now log in.')
             return redirect('store:product-list')
@@ -44,6 +62,8 @@ def register_user(request):
     return render(request, 'store/register.html', {'form': form})
 
 def login_user(request):
+    if request.user.is_authenticated:
+        return redirect('store:product-list')
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -127,8 +147,15 @@ def checkout(request):
         profile.save()
 
         library, created = UserLibrary.objects.get_or_create(user=request.user)
+
         for item in cart_items:
             library.products.add(item.product)
+
+            Transaction.objects.create(
+                user=request.user,
+                product=item.product,
+                price=item.product.price
+            )
 
         cart_items.delete()
 
@@ -142,10 +169,18 @@ def checkout(request):
 @login_required
 def view_profile(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)
+    transactions = Transaction.objects.filter(user=request.user).order_by('-date')[:10]
+
+    if request.method == 'POST' and request.FILES.get('avatar'):
+        profile.avatar = request.FILES['avatar']
+        profile.save()
+        messages.success(request, "Avatar updated successfully!")
+        return redirect('store:view_profile')
 
     return render(request, 'store/profile.html', {
         'profile': profile,
-        'user': request.user
+        'user': request.user,
+        'transactions': transactions
     })
 
 @login_required
@@ -168,3 +203,77 @@ def repository(request):
     library, created = UserLibrary.objects.get_or_create(user=request.user)
     games = library.products.all()
     return render(request, 'store/repository.html', {'games': games})
+
+@login_required
+def refund_game(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id, user=request.user)
+
+    profile = UserProfile.objects.get(user=request.user)
+    profile.balance += transaction.price
+    profile.save()
+
+    library = UserLibrary.objects.get(user=request.user)
+    library.products.remove(transaction.product)
+
+    game_name = transaction.product.name
+    transaction.delete()
+
+    messages.success(request, f"Successfully refunded {game_name}. ₱{transaction.price} has been returned to your wallet.")
+    return redirect('store:view_profile')
+
+@login_required
+def wishlist_view(request):
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    products = wishlist.products.all()
+    return render(request, 'store/wishlist.html', {'products': products})
+
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+
+    wishlist.products.add(product)
+    messages.success(request, f"Added {product.name} to your Wishlist!")
+    return redirect('store:product-list')
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist = Wishlist.objects.get(user=request.user)
+
+    wishlist.products.remove(product)
+    messages.success(request, "Removed from Wishlist.")
+    return redirect('store:wishlist_view')
+
+
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    reviews = Review.objects.filter(product=product).order_by('-created_at')
+    user_owns = False
+    if request.user.is_authenticated:
+        library, created = UserLibrary.objects.get_or_create(user=request.user)
+        if library.products.filter(id=product.id).exists():
+            user_owns = True
+
+    if request.method == "POST" and request.user.is_authenticated:
+        if not user_owns:
+            messages.error(request, "You must own the game to review it!")
+            return redirect('store:product_detail', product_id=product.id)
+
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment')
+
+        Review.objects.create(
+            product=product,
+            user=request.user,
+            rating=rating,
+            comment=comment
+        )
+        messages.success(request, "Review posted!")
+        return redirect('store:product_detail', product_id=product.id)
+
+    return render(request, 'store/product_detail.html', {
+        'product': product,
+        'reviews': reviews,
+        'user_owns': user_owns
+    })

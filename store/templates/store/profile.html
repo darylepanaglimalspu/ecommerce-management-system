@@ -2,38 +2,256 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Profile</title>
+    <title>PYCRIB | Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- BASE THEME --- */
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-attachment: fixed;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding-bottom: 50px;
+            min-height: 100vh;
+        }
+
+        a { text-decoration: none; transition: all 0.2s ease; }
+
+        /* NAVBAR */
+        nav {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo {
+            font-size: 26px; font-weight: 800; letter-spacing: 1px;
+            background: linear-gradient(to right, #c471ed, #f64f59);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .nav-center-pill { background: rgba(255, 255, 255, 0.05); padding: 10px 30px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 25px; }
+        .nav-link-item { color: rgba(255, 255, 255, 0.6); font-weight: 500; font-size: 15px; }
+        .nav-link-item:hover { color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+        .nav-link-item.active { color: #fff; font-weight: 600; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .user-pill { background: rgba(255, 255, 255, 0.08); padding: 5px 15px 5px 5px; border-radius: 50px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: white !important; font-weight: 600;}
+        .user-pill:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(196, 113, 237, 0.5); }
+        .user-pill img { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; object-fit: cover;}
+        .logout-link { color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500;}
+        .logout-link:hover { color: #ff4c4c; }
+
+        /* --- PROFILE LAYOUT --- */
+        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        /* Top Header: Avatar & Info */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+        }
+
+        .avatar-section { position: relative; }
+        .avatar-img {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #66c0f4;
+            box-shadow: 0 0 20px rgba(102, 192, 244, 0.4);
+        }
+        .avatar-placeholder {
+            width: 120px; height: 120px;
+            background: #3d4450; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px; color: rgba(255,255,255,0.3);
+            border: 3px solid rgba(255,255,255,0.1);
+        }
+
+        /* Custom File Upload Button */
+        .upload-btn-wrapper { margin-top: 10px; text-align: center;}
+        input[type="file"] { display: none; }
+        .custom-file-upload {
+            border: 1px solid rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 12px;
+            background: rgba(255,255,255,0.05);
+            color: #ccc;
+            transition: 0.2s;
+        }
+        .custom-file-upload:hover { background: rgba(255,255,255,0.1); color: white; }
+        .btn-save-avatar {
+            background: #66c0f4; color: #1b2838; border: none;
+            padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: bold;
+            cursor: pointer; margin-left: 5px;
+        }
+
+        .user-info h1 { margin: 0 0 5px 0; font-size: 32px; font-weight: 800; }
+        .user-info p { margin: 5px 0; color: rgba(255,255,255,0.5); font-size: 14px; }
+        .join-date { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #66c0f4; margin-top: 10px; display: block;}
+
+        /* WALLET CARD */
+        .wallet-card {
+            background: linear-gradient(135deg, rgba(40,167,69,0.1), rgba(40,167,69,0.05));
+            border: 1px solid rgba(40,167,69,0.3);
+            padding: 20px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .balance-label { font-size: 14px; text-transform: uppercase; color: #8f98a0; letter-spacing: 1px; }
+        .balance-amount { font-size: 36px; font-weight: 800; color: #2ed573; text-shadow: 0 0 15px rgba(46, 213, 115, 0.3); }
+
+        .btn-add-funds {
+            background: #2ed573; color: #1b2838;
+            padding: 10px 20px; border-radius: 8px; font-weight: 700;
+            transition: 0.3s;
+        }
+        .btn-add-funds:hover { background: #fff; box-shadow: 0 0 15px #2ed573; }
+
+        /* HISTORY TABLE */
+        .history-section h2 { font-weight: 300; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px;}
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; color: rgba(255,255,255,0.4); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        td { padding: 15px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); }
+        tr:last-child td { border-bottom: none; }
+
+        .refund-link { color: #ff4757; font-size: 12px; font-weight: 600; text-decoration: underline; cursor: pointer; opacity: 0.7; }
+        .refund-link:hover { opacity: 1; text-shadow: 0 0 10px rgba(255, 71, 87, 0.5); }
+
+        .btn-signout {
+            display: block; margin: 40px auto 0 auto;
+            color: rgba(255,255,255,0.3); font-weight: 600; font-size: 14px;
+            text-align: center; width: fit-content;
+        }
+        .btn-signout:hover { color: #ff4757; }
+
+        /* Messages */
+        .alert { background: rgba(46, 213, 115, 0.15); border: 1px solid rgba(46, 213, 115, 0.3); color: #2ed573; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 20px; }
+
+    </style>
 </head>
-<body style="font-family: sans-serif; padding: 20px; background-color: #1b2838; color: white;">
+<body>
 
-    <div style="margin-bottom: 30px;">
-        <h1 style="display: inline;">{{ user.username }}'s Profile</h1>
-        <a href="{% url 'store:product-list' %}" style="float: right; color: #66c0f4; text-decoration: none;">← Back to Store</a>
-    </div>
-
-    <div style="background-color: #2a475e; padding: 20px; border-radius: 5px; max-width: 600px;">
-
-        <h2 style="border-bottom: 1px solid #417a9b; padding-bottom: 10px;">Account Details</h2>
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Date Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
-
-        <br>
-
-        <h2 style="border-bottom: 1px solid #417a9b; padding-bottom: 10px;">Crib Wallet</h2>
-
-        <div style="background-color: #00000050; padding: 15px; border-radius: 3px; margin-bottom: 20px;">
-            <span style="font-size: 14px; color: #8f98a0;">Current Balance:</span><br>
-            <span style="font-size: 32px; color: #66c0f4;">₱{{ profile.balance }}</span>
+    <nav>
+        <div class="logo">PYCRIB</div>
+        <div class="nav-center-pill">
+            <a href="{% url 'store:product-list' %}" class="nav-link-item">Games</a>
+            <a href="{% url 'store:repository' %}" class="nav-link-item">Repository</a>
+            <a href="{% url 'store:cart_detail' %}" class="nav-link-item">Cart</a>
+            <a href="{% url 'store:wishlist_view' %}" class="nav-link-item">Wishlist</a>
         </div>
+        <div class="nav-right">
+            <a href="{% url 'store:logout' %}" class="logout-link">Logout</a>
+        </div>
+    </nav>
 
-        <a href="{% url 'store:top_up_wallet' %}" style="background-color: #5c7e10; color: white; padding: 10px 20px; text-decoration: none; border-radius: 2px; font-weight: bold;">
-            + Add Funds to Crib Wallet
-        </a>
+    <div class="container">
 
-        <a href="{% url 'store:logout' %}" style="margin-left: 20px; color: #b8b6b4;">Sign Out</a>
+        {% if messages %}
+            {% for message in messages %}<div class="alert">{{ message }}</div>{% endfor %}
+        {% endif %}
 
+        <div class="profile-card">
+
+            <div class="profile-header">
+                <div class="avatar-section">
+                    {% if profile.avatar %}
+                        <img src="{{ profile.avatar.url }}" class="avatar-img">
+                    {% else %}
+                        <div class="avatar-placeholder">?</div>
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data" class="upload-btn-wrapper">
+                        {% csrf_token %}
+                        <label for="file-upload" class="custom-file-upload">Change</label>
+                        <input id="file-upload" type="file" name="avatar" onchange="this.form.submit()"/>
+                    </form>
+                </div>
+
+                <div class="user-info">
+                    <h1>{{ user.username }}</h1>
+                    <p>{{ user.email }}</p>
+                    <span class="join-date">Member since {{ user.date_joined|date:"F Y" }}</span>
+                </div>
+            </div>
+
+            <div class="wallet-card">
+                <div>
+                    <div class="balance-label">Crib Wallet Balance</div>
+                    <div class="balance-amount">₱{{ profile.balance }}</div>
+                </div>
+                <a href="{% url 'store:top_up_wallet' %}" class="btn-add-funds">+ Add Funds</a>
+            </div>
+
+            <div class="history-section">
+                <h2>Transaction History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Game</th>
+                            <th>Price</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in transactions %}
+                        <tr>
+                            <td>{{ t.date|date:"M d, Y" }}</td>
+                            <td style="color: white; font-weight: 600;">{{ t.product.name }}</td>
+                            <td>₱{{ t.price }}</td>
+                            <td>
+                                <a href="{% url 'store:refund_game' t.id %}"
+                                   onclick="return confirm('Refund {{ t.product.name }}? This cannot be undone.');"
+                                   class="refund-link">
+                                   Refund
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" style="text-align: center; color: rgba(255,255,255,0.3);">No purchases found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <a href="{% url 'store:logout' %}" class="btn-signout">Sign Out of Account</a>
+
+        </div>
     </div>
+
+    <script>
+        // Fade Out Alerts
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.style.transition = "opacity 1s ease"; alert.style.opacity = "0";
+                    setTimeout(function() { alert.style.display = "none"; }, 1000);
+                }, 4000);
+            });
+        });
+    </script>
 
 </body>
 </html>

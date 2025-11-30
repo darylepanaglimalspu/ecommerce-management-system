@@ -2,30 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Login | PYCRIB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- COPYING THE STORE THEME --- */
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- THE GLASS CARD --- */
+        .auth-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 50px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .logo {
+        font-size: 60px; /* HUGE TEXT */
+        font-weight: 900; /* Extra Bold */
+        margin-bottom: 10px;
+        background: linear-gradient(to right, #c471ed, #f64f59);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        text-shadow: 0 10px 30px rgba(196, 113, 237, 0.3); /* Glowing shadow */
+        }
+
+        h2 { font-size: 32px; font-weight: 800; margin-bottom: 10px; letter-spacing: -1px; }
+        .subtitle { color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 30px; }
+
+        /* --- INPUT FIELDS --- */
+        /* We target input types specifically to override default styles */
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box; /* Keeps padding inside width */
+            transition: 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #8e2de2;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Hide Django's help text to keep it clean */
+        .helptext { display: none; }
+        label { display: none; } /* Hide labels for a cleaner look */
+
+        /* --- BUTTONS --- */
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4); }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: rgba(255,255,255,0.5);
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .back-link:hover { color: white; }
+
+        .register-link { color: #d4a5ff; font-weight: 600; text-decoration: none; }
+        .register-link:hover { color: #fff; text-decoration: underline; }
+
+        .error-msg { color: #ff4757; font-size: 14px; margin-bottom: 15px; display: block; }
+    </style>
 </head>
 <body>
 
-<div style="margin-bottom: 20px;">
-    <a href="{% url 'store:product-list' %}" style="text-decoration: none; color: #555; font-weight: bold;">
-        &larr; Back to Home
-    </a>
-</div>
+    <div class="auth-card">
+        <div class="logo">PYCRIB</div>  <h2>Welcome Back</h2>
+        <p class="subtitle">Enter your credentials to access your crib.</p>
 
-    <h2>Login</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <span class="error-msg">{{ message }}</span>
+            {% endfor %}
+        {% endif %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <div style="color: red;">{{ messages }}</div>
-        {% endfor %}
-    {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
 
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
+            <button type="submit">Log In</button>
+        </form>
 
-    <p>Don't have an account? <a href="{% url 'store:register' %}">Register here</a></p>
+        <p style="margin-top: 20px; font-size: 14px; color: rgba(255,255,255,0.6);">
+            New here? <a href="{% url 'store:register' %}" class="register-link">Create an account</a>
+        </p>
+
+        <a href="{% url 'store:product-list' %}" class="back-link">← Back to Store</a>
+    </div>
+
 </body>
 </html>

@@ -2,23 +2,91 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>Join | PYCRIB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- SAME THEME --- */
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh; /* Allow scrolling if form is tall */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 50px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 450px; /* Slightly wider for registration */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        h2 { font-size: 32px; font-weight: 800; margin-bottom: 10px; letter-spacing: -1px; }
+        .subtitle { color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 30px; }
+
+        /* Inputs */
+        input[type="text"], input[type="password"], input[type="email"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px; /* Tighter spacing */
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus { outline: none; border-color: #8e2de2; background: rgba(0, 0, 0, 0.5); }
+
+        /* Clean up Django Form Junk */
+        ul.errorlist { list-style: none; padding: 0; color: #ff4757; text-align: left; font-size: 13px; margin-bottom: 10px;}
+        .helptext { display: none; }
+        label { display: none; }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #8e2de2, #4a00e0);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(138, 43, 226, 0.4); }
+
+        .login-link { color: #d4a5ff; font-weight: 600; text-decoration: none; }
+        .login-link:hover { color: #fff; text-decoration: underline; }
+    </style>
 </head>
 <body>
-    <h2>Create an Account</h2>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div>{{ message }}</div>
-        {% endfor %} {% endif %}
+    <div class="auth-card">
+        <h2>Join the Club</h2>
+        <p class="subtitle">Create your account to start collecting games.</p>
 
-    <form method="POST">
-        {% csrf_token %} {{ form.as_p }}
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Create Account</button>
+        </form>
 
-        <button type="submit">Sign Up</button>
-    </form>
-
-    <p>Already have an account? <a href="{% url 'store:login' %}">Log In</a></p>
+        <p style="margin-top: 20px; font-size: 14px; color: rgba(255,255,255,0.6);">
+            Already have an account? <a href="{% url 'store:login' %}" class="login-link">Log In</a>
+        </p>
+    </div>
 
 </body>
 </html>

@@ -2,66 +2,274 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PYCRIB >Our Games<</title>
+    <title>PYCRIB | Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- BASE & GLASS THEME --- */
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background-attachment: fixed;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding-bottom: 50px; min-height: 100vh;
+        }
+        a { text-decoration: none; transition: all 0.3s ease; }
+
+        /* NAVBAR (Same as before) */
+        nav {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { font-size: 26px; font-weight: 800; letter-spacing: 1px; background: linear-gradient(to right, #c471ed, #f64f59); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-center-pill { background: rgba(255, 255, 255, 0.05); padding: 10px 30px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 25px; }
+        .nav-link-item { color: rgba(255, 255, 255, 0.6); font-weight: 500; font-size: 15px; }
+        .nav-link-item:hover { color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+        .nav-link-item.active { color: #fff; font-weight: 600; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .user-pill {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 5px 15px 5px 5px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+
+            /* --- THIS IS THE FIX --- */
+            color: #ffffff !important; /* Forces text to be white */
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .user-pill:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(196, 113, 237, 0.5); }
+        .user-pill img { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; object-fit: cover;}
+        .logout-link { color: rgba(255,255,255,0.5); font-size: 14px; } .logout-link:hover { color: #ff4c4c; }
+
+        .container { max-width: 1100px; margin: 40px auto; padding: 20px; }
+
+        /* --- 1. BANNER SECTION --- */
+        .store-banner {
+            width: 100%;
+            height: 250px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .store-banner img { width: 100%; height: 100%; object-fit: cover; }
+        .banner-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 20px; box-sizing: border-box;
+        }
+
+        /* --- 2. SEARCH WITH DROPDOWN --- */
+        .search-container { position: relative; margin-bottom: 50px; }
+        .search-box {
+            display: flex; background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px; padding: 5px; border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .search-box input { flex-grow: 1; background: transparent; border: none; color: white; padding: 15px 20px; font-size: 17px; outline: none; }
+        .search-box button { background: linear-gradient(to right, #8e2de2, #4a00e0); border: none; color: white; font-weight: 700; padding: 0 40px; border-radius: 12px; cursor: pointer; }
+
+        /* The Hidden Dropdown */
+        .category-dropdown {
+            display: none; /* Hidden by default */
+            position: absolute; top: 100%; left: 0; width: 100%;
+            background: #16202d;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px; z-index: 50;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-top: 5px;
+        }
+        .category-dropdown span { display: block; color: #8f98a0; font-size: 12px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .cat-tag {
+            display: inline-block; background: rgba(255,255,255,0.05); color: #c7d5e0;
+            padding: 8px 15px; border-radius: 5px; margin-right: 10px; margin-bottom: 10px;
+            font-size: 14px; transition: 0.2s;
+        }
+        .cat-tag:hover { background: #66c0f4; color: #1b2838; }
+
+        /* --- 3. FEATURED GAME SECTION --- */
+        .featured-section {
+            background: #0f1014;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 50px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .featured-image { width: 65%; height: 400px; position: relative; }
+        .featured-image img { width: 100%; height: 100%; object-fit: cover; }
+        .featured-info {
+            width: 35%; padding: 40px;
+            display: flex; flex-direction: column; justify-content: center;
+            background: linear-gradient(180deg, rgba(22,32,45,1) 0%, rgba(15,16,20,1) 100%);
+        }
+        .featured-label { color: #66c0f4; font-weight: 700; letter-spacing: 2px; font-size: 12px; margin-bottom: 10px; text-transform: uppercase;}
+        .featured-title { font-size: 32px; font-weight: 800; margin: 0 0 15px 0; line-height: 1.1; }
+        .featured-desc { color: #8f98a0; font-size: 15px; line-height: 1.6; margin-bottom: 30px; }
+
+        /* --- GAME GRID --- */
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        .game-card {
+            background: rgba(255, 255, 255, 0.04); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 24px;
+            margin-bottom: 30px; display: flex; flex-direction: column; overflow: hidden;
+            transition: all 0.3s; position: relative;
+        }
+        .game-card:hover { transform: translateY(-10px); border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .game-image-container { height: 200px; width: 100%; background: #1a1a2e; }
+        .game-image { width: 100%; height: 100%; object-fit: cover; }
+        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+        .game-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .game-title { font-size: 20px; font-weight: 700; margin: 0; }
+        .game-title a { color: #fff; }
+        .category-badge { display: inline-block; background: rgba(142, 45, 226, 0.15); color: #d4a5ff; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; border: 1px solid rgba(142, 45, 226, 0.2); }
+        .price { font-size: 22px; font-weight: 800; color: #fff; display: block; margin-bottom: 15px; }
+
+        .btn-add-full { background: linear-gradient(to right, #8e2de2, #4a00e0); color: white; padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 700; display: block; width: 100%; text-align: center; border: none; margin-top: auto; }
+        .btn-add-full:hover { background: linear-gradient(to right, #9b45e4, #5d1be8); color: white; }
+        .btn-wishlist-floating { position: absolute; top: 15px; right: 15px; font-size: 24px; color: rgba(255,255,255,0.6); z-index: 2; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; }
+        .btn-wishlist-floating:hover { color: #ff4757; background: rgba(255, 71, 87, 0.2); transform: scale(1.1); }
+        .alert { background: rgba(46, 213, 115, 0.15); border: 1px solid rgba(46, 213, 115, 0.3); color: #2ed573; padding: 15px; border-radius: 12px; text-align: center; margin: 20px auto; max-width: 960px; font-weight: 600; }
+
+    </style>
 </head>
-
-<nav style="padding: 15px; background-color: #171a21; color: white; margin-bottom: 20px; font-family: sans-serif;">
-
-    <span style="font-size: 20px; font-weight: bold; margin-right: 20px;">PYCRIB</span>
-
-    <div style="float: right;">
-        {% if user.is_authenticated %}
-            <a href="{% url 'store:view_profile' %}" style="color: #c7d5e0; text-decoration: none; font-weight: bold;">
-                 {{ user.username }} (₱{{ user.userprofile.balance|default:"0.00" }})
-            </a>
-
-            <a href="{% url 'store:repository' %}" style="margin-left: 15px; color: #c7d5e0; text-decoration: none;">Repository</a>
-
-            <a href="{% url 'store:cart_detail' %}" style="margin-left: 15px; background-color: #5c7e10; color: white; padding: 5px 10px; text-decoration: none; font-weight: bold;">
-                Cart ({{ cart_count }})
-            </a>
-
-            <a href="{% url 'store:logout' %}" style="margin-left: 15px; color: #b8b6b4; text-decoration: none;">Logout</a>
-        {% else %}
-            <a href="{% url 'store:login' %}" style="color: white; margin-right: 10px;">Login</a>
-            <a href="{% url 'store:register' %}" style="color: white;">Register</a>
-        {% endif %}
-    </div>
-    <div style="clear: both;"></div>
-</nav>
-{% if messages %}
-    <div style="padding: 10px; background-color: #d4edda; color: #155724; margin-bottom: 20px;">
-        {% for message in messages %}
-            {{ message }}
-        {% endfor %}
-    </div>
-{% endif %}
-
-
-<form method="GET" action="" style="margin-bottom: 20px;">
-    <input type="text" name="q" placeholder="Search for games..." value="{{ query|default:'' }}">
-    <button type="submit">Search</button>
-</form>
-
-
-<h1>Welcome to our Store!</h1>
-<h2>Here are our products:</h2>
-
 <body>
 
-    <div>
-        {% for product in products %}
-            <div>
-                <h3>{{ product.name }}</h3>
-                <p>{{ product.description }}</p>
-                <p><strong>Price: ₱{{ product.price }}</strong></p>
-
-                <a href="{% url 'store:add_to_cart' product.id %}" style="background-color:#28a745; color: white; padding: 5px 10px; text-decoration: none; border-radius: 5px;">
-                    Add to Cart
-                </a>
+    <nav>
+        <div class="logo">PYCRIB</div>
+        {% if user.is_authenticated %}
+            <div class="nav-center-pill">
+                <a href="{% url 'store:product-list' %}" class="nav-link-item active">Games</a>
+                <a href="{% url 'store:repository' %}" class="nav-link-item">Repository</a>
+                <a href="{% url 'store:cart_detail' %}" class="nav-link-item">Cart ({{ cart_count }})</a>
+                <a href="{% url 'store:wishlist_view' %}" class="nav-link-item">Wishlist</a>
             </div>
-            <hr>
-        {% endfor %}
+            <div class="nav-right">
+                <a href="{% url 'store:view_profile' %}" class="user-pill">
+                    {% if user.userprofile.avatar %} <img src="{{ user.userprofile.avatar.url }}"> {% else %} <div style="width: 32px; height: 32px; background: #555; border-radius: 50%; margin-right: 10px;"></div> {% endif %}
+                    <span>{{ user.username }} &nbsp; <span style="color: #d4a5ff;">₱{{ user.userprofile.balance|default:"0.00" }}</span></span>
+                </a>
+                <a href="{% url 'store:logout' %}" class="logout-link">Logout</a>
+            </div>
+        {% else %}
+            <div></div>
+            <div class="nav-right">
+                <a href="{% url 'store:login' %}" class="nav-link-item" style="margin-right: 20px;">Login</a>
+                <a href="{% url 'store:register' %}" class="btn-add-full" style="padding: 10px 25px; width: auto; display: inline-block;">Register</a>
+            </div>
+        {% endif %}
+    </nav>
+
+    {% if messages %}
+        {% for message in messages %}<div class="alert">{{ message }}</div>{% endfor %}
+    {% endif %}
+
+    <div class="container">
+
+        {% if banner %}
+        <div class="store-banner">
+            <img src="{{ banner.image.url }}" alt="Store Banner">
+            <div class="banner-overlay">
+                <h1 style="margin: 0; font-size: 36px; text-shadow: 0 4px 10px rgba(0,0,0,0.8);">{{ banner.title }}</h1>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="search-container">
+            <form method="GET" action="" class="search-box">
+                <input type="text" name="q" placeholder="Find your next obsession..." value="{{ query|default:'' }}" onfocus="showCategories()" onblur="hideCategories()">
+                <button type="submit">SEARCH</button>
+            </form>
+
+            <div class="category-dropdown" id="catDropdown">
+                <span>Browse by Category</span>
+                {% for code, name in categories %}
+                    <a href="?q={{ name }}" class="cat-tag">{{ name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if featured_game %}
+        <h2 style="margin-bottom: 20px;">Featured & Recommended</h2>
+        <div class="featured-section">
+            <div class="featured-image">
+                {% if featured_game.image %}
+                    <img src="{{ featured_game.image.url }}" alt="{{ featured_game.name }}">
+                {% else %}
+                    <div class="no-image-placeholder" style="height:100%; display:flex; justify-content:center; align-items:center; background:#222;">NO IMAGE</div>
+                {% endif %}
+            </div>
+            <div class="featured-info">
+                <span class="featured-label">Featured Game</span>
+                <h2 class="featured-title">{{ featured_game.name }}</h2>
+                <p class="featured-desc">{{ featured_game.description|truncatechars:150 }}</p>
+                <div style="font-size: 28px; font-weight: 800; margin-bottom: 20px;">₱{{ featured_game.price }}</div>
+                <a href="{% url 'store:add_to_cart' featured_game.id %}" class="btn-add-full" style="width: auto; padding: 15px 40px;">Buy Now</a>
+            </div>
+        </div>
+        {% endif %}
+
+        <h1 style="font-weight: 300; margin: 60px 0 30px 0; font-size: 28px;">More <strong style="font-weight: 800;">Games</strong></h1>
+
+        <div class="game-grid">
+            {% for product in products %}
+                <div class="game-card">
+                    <a href="{% url 'store:add_to_wishlist' product.id %}" class="btn-wishlist-floating">❤</a>
+                    <div class="game-image-container">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="game-image">
+                        {% else %}
+                            <div class="no-image-placeholder" style="width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:linear-gradient(45deg, #302b63, #24243e);">PYCRIB</div>
+                        {% endif %}
+                    </div>
+                    <div class="card-content">
+                        <div class="game-header">
+                            <h3 class="game-title"><a href="{% url 'store:product_detail' product.id %}">{{ product.name }}</a></h3>
+                        </div>
+                        <div><span class="category-badge">{{ product.get_category_display }}</span></div>
+                        <p style="color:rgba(255,255,255,0.6); font-size:13px; margin: 10px 0 20px 0;">{{ product.description|truncatechars:50 }}</p>
+                        <span class="price">₱{{ product.price }}</span>
+                        <a href="{% url 'store:add_to_cart' product.id %}" class="btn-add-full">Add to Cart</a>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No games found.</p>
+            {% endfor %}
+        </div>
+
     </div>
+
+    <script>
+        // Fade Out Alerts
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    alert.style.transition = "opacity 1s ease"; alert.style.opacity = "0";
+                    setTimeout(function() { alert.style.display = "none"; }, 1000);
+                }, 4000);
+            });
+        });
+
+        // Search Dropdown Logic
+        function showCategories() {
+            document.getElementById('catDropdown').style.display = 'block';
+        }
+        function hideCategories() {
+            // Delay hide so clicking a link works
+            setTimeout(function() {
+                document.getElementById('catDropdown').style.display = 'none';
+            }, 200);
+        }
+    </script>
+
 </body>
 </html>
