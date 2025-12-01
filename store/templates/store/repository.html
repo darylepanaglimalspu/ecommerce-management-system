@@ -2,128 +2,223 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PYCRIB | Library</title>
+    <title>PYCRIB | Repository</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* --- COPYING THE GLASS THEME --- */
+        /* --- BASE THEME --- */
         body {
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             background-attachment: fixed;
             color: #ffffff;
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding-bottom: 50px;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         a { text-decoration: none; transition: all 0.2s ease; }
 
-        /* NAVBAR */
+        /* NAVBAR (UNCHANGED) */
         nav {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 100;
+            position: sticky; top: 0; z-index: 100; flex-shrink: 0;
         }
-        .logo {
-            font-size: 26px; font-weight: 800; letter-spacing: 1px;
-            background: linear-gradient(to right, #c471ed, #f64f59);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+        .logo { font-size: 26px; font-weight: 800; letter-spacing: 1px; background: linear-gradient(to right, #c471ed, #f64f59); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .nav-center-pill { background: rgba(255, 255, 255, 0.05); padding: 10px 30px; border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 25px; }
         .nav-link-item { color: rgba(255, 255, 255, 0.6); font-weight: 500; font-size: 15px; }
         .nav-link-item:hover { color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.5); }
         .nav-link-item.active { color: #fff; font-weight: 600; }
         .nav-right { display: flex; align-items: center; gap: 20px; }
-        .user-pill {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 5px 15px 5px 5px;
-            border-radius: 50px;
-            display: inline-flex;
-            align-items: center;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.3s;
-
-            /* --- THIS MAKES THE NAME VISIBLE --- */
-            color: #ffffff !important;
-            text-decoration: none;
-            font-weight: 600;
-        }
+        .user-pill { background: rgba(255, 255, 255, 0.08); padding: 5px 15px 5px 5px; border-radius: 50px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; color: white !important; font-weight: 600;}
         .user-pill:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(196, 113, 237, 0.5); }
         .user-pill img { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; object-fit: cover;}
         .logout-link { color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500;}
         .logout-link:hover { color: #ff4c4c; }
 
-        /* CONTAINER */
-        .container { max-width: 1100px; margin: 40px auto; padding: 20px; }
+        /* --- LAYOUT CONTAINER --- */
+        .library-container {
+            display: flex;
+            flex-grow: 1;
+            height: calc(100vh - 73px);
+            overflow: hidden;
+        }
 
-        /* GAME GRID & CARD */
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
-
-        .game-card {
-            background: rgba(255, 255, 255, 0.04);
+        /* --- LEFT SIDEBAR --- */
+        .sidebar {
+            width: 300px;
+            background: rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            display: flex; flex-direction: column; overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .game-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            overflow-y: auto;
+            display: flex; flex-direction: column;
         }
 
-        .game-image-container { height: 180px; width: 100%; background: #1a1a2e; }
-        .game-image { width: 100%; height: 100%; object-fit: cover; }
-        .no-image-placeholder {
-            width: 100%; height: 100%;
-            background: linear-gradient(45deg, #302b63, #24243e);
-            display: flex; justify-content: center; align-items: center;
-            color: rgba(255,255,255,0.2); font-weight: 800; font-size: 24px;
+        .sidebar-search {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .sidebar-search input {
+            width: 100%; background: rgba(255,255,255,0.1); border: none;
+            padding: 8px 12px; border-radius: 6px; color: #ccc; outline: none;
         }
 
-        .card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-        .game-title { font-size: 20px; font-weight: 700; margin: 0 0 5px 0; color: #fff; }
-        .play-time { color: rgba(255,255,255,0.4); font-size: 12px; margin-bottom: 20px; }
-
-        /* ACTION BUTTONS GRID */
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: auto;
-        }
-
-        /* Specific Buttons for Library */
-        .btn-install {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ccc;
-            padding: 10px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+        .game-list-item {
+            padding: 12px 20px;
+            display: flex; align-items: center;
+            color: #8f98a0;
             cursor: pointer;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
         }
-        .btn-install:hover { background: rgba(255, 255, 255, 0.2); color: white; border-color: white; }
+        .game-list-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .game-list-item.active { background: linear-gradient(to right, rgba(102, 192, 244, 0.1), transparent); color: #fff; border-left-color: #66c0f4; }
+        .mini-icon { width: 24px; height: 24px; margin-right: 10px; border-radius: 4px; background: #333; object-fit: cover; }
+
+
+        /* --- RIGHT MAIN CONTENT --- */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            position: relative;
+            background: radial-gradient(circle at top right, rgba(36, 36, 62, 0.5), rgba(15, 12, 41, 0.8));
+        }
+
+        .game-details-panel {
+            display: none;
+            padding-bottom: 50px;
+        }
+        .game-details-panel.active-panel { display: block; }
+
+        /* Hero Banner */
+        .hero-banner {
+            height: 300px; width: 100%; position: relative; overflow: hidden;
+        }
+        .hero-banner img { width: 100%; height: 100%; object-fit: cover; mask-image: linear-gradient(to bottom, black 60%, transparent); }
+        .hero-info {
+            position: absolute; bottom: 30px; left: 40px;
+        }
+        .hero-title { font-size: 48px; font-weight: 800; margin: 0; text-shadow: 0 5px 20px rgba(0,0,0,0.8); }
+
+        /* Action Bar */
+        .action-bar {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            margin: -20px 40px 30px 40px;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex; align-items: center; gap: 20px;
+            position: relative; z-index: 2;
+            min-height: 80px; /* Ensures height doesn't collapse during transitions */
+            box-sizing: border-box;
+        }
+
+        .btn-action-large {
+            padding: 15px 40px; border-radius: 8px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: 0.2s;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .btn-install {
+            background: linear-gradient(to right, #66c0f4, #2a475e);
+            color: white; box-shadow: 0 0 20px rgba(102, 192, 244, 0.2);
+        }
+        .btn-install:hover { filter: brightness(1.2); transform: translateY(-2px); }
 
         .btn-play {
-            background: linear-gradient(to right, #5c7e10, #80b020); /* Steam Green Vibe */
-            color: white;
-            padding: 10px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            text-align: center;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(92, 126, 16, 0.3);
+            background: linear-gradient(to right, #5c7e10, #80b020);
+            color: white; box-shadow: 0 0 20px rgba(92, 126, 16, 0.3);
+            display: none;
         }
         .btn-play:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+        .uninstall-link {
+            color: #8f98a0; font-size: 13px; text-decoration: underline; cursor: pointer;
+            display: none;
+        }
+        .uninstall-link:hover { color: #ff4757; }
+
+
+        /* PROGRESS BAR SIMULATION */
+        .download-container {
+            flex-grow: 1; height: 50px; background: rgba(0,0,0,0.3); border-radius: 8px;
+            position: relative; overflow: hidden; display: none;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .download-bar {
+            height: 100%; width: 0%;
+            background: linear-gradient(to right, #66c0f4, #1b2838); /* Default Blue Install */
+            transition: width 3s ease-in-out;
+        }
+        /* --- NEW: RED COLOR FOR UNINSTALLING --- */
+        .download-bar.is-uninstalling {
+             background: linear-gradient(to right, #ff4757, #302b63); /* Red Uninstall */
+        }
+
+        .download-text {
+            position: absolute; top: 50%; left: 20px; transform: translateY(-50%);
+            color: rgba(255,255,255,0.7); font-weight: 600; font-size: 14px;
+        }
+
+        /* Details Section */
+        .details-grid {
+            display: grid; grid-template-columns: 2fr 1fr; gap: 40px; padding: 0 40px;
+        }
+        .stats-card {
+            background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; margin-bottom: 20px;
+        }
+        .stat-label { color: #8f98a0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-value { font-size: 18px; margin-top: 5px; }
+
+        /* --- FOOTER STYLES --- */
+        footer {
+            background: #171a21; /* Deep Steam Dark */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #8f98a0;
+            padding: 40px 20px;
+            margin-top: auto; /* Pushes footer to bottom if page is short */
+            font-size: 14px;
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr; /* 3 Columns */
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 { color: #fff; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-col p { line-height: 1.6; color: #8f98a0; margin-bottom: 10px; }
+
+        .team-list { list-style: none; padding: 0; }
+        .team-list li { margin-bottom: 8px; color: #c7d5e0; }
+
+        .social-icons { display: flex; gap: 15px; }
+        .social-icon {
+            width: 32px; height: 32px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+            fill: #c7d5e0; /* Icon Color */
+        }
+        .social-icon:hover { background: #66c0f4; fill: #171a21; transform: translateY(-3px); }
+        .social-icon svg { width: 18px; height: 18px; }
+
+        .footer-bottom {
+            max-width: 1100px; margin: 0 auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .footer-logo { font-weight: 800; font-size: 20px; color: #555; }
 
     </style>
 </head>
@@ -146,40 +241,247 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="library-container">
 
-        <h1 style="font-weight: 300; margin-bottom: 40px; font-size: 36px;">My <strong style="font-weight: 800; background: linear-gradient(to right, #c471ed, #f64f59); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Library</strong></h1>
+        <div class="sidebar">
+            <div class="sidebar-search">
+                <input type="text" placeholder="Search Collection...">
+            </div>
 
-        <div class="game-grid">
+            <div style="padding: 10px 20px; font-size: 12px; color: #66c0f4; text-transform: uppercase; letter-spacing: 1px;">All Games ({{ games|length }})</div>
+
             {% for game in games %}
-                <div class="game-card">
-                    <div class="game-image-container">
-                        {% if game.image %}
-                            <img src="{{ game.image.url }}" alt="{{ game.name }}" class="game-image">
-                        {% else %}
-                            <div class="no-image-placeholder">PYCRIB</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="card-content">
-                        <div class="game-title">{{ game.name }}</div>
-                        <div class="play-time">Ready to install</div>
-
-                        <div class="action-grid">
-                            <button class="btn-install" onclick="alert('Downloading {{ game.name }}...')">Install</button>
-                            <button class="btn-play" onclick="alert('Launching {{ game.name }}...')">Play</button>
-                        </div>
-                    </div>
+                <div class="game-list-item {% if forloop.first %}active{% endif %}" onclick="selectGame('{{ game.id }}')">
+                    {% if game.image %}
+                        <img src="{{ game.image.url }}" class="mini-icon">
+                    {% else %}
+                        <div class="mini-icon"></div>
+                    {% endif %}
+                    <span>{{ game.name }}</span>
                 </div>
             {% empty %}
-                <div style="grid-column: 1 / -1; text-align: center; padding: 50px; background: rgba(255,255,255,0.03); border-radius: 20px;">
-                    <h2 style="color: rgba(255,255,255,0.5); font-weight: 300;">Your library is empty.</h2>
-                    <a href="{% url 'store:product-list' %}" style="color: #c471ed; margin-top: 10px; display: inline-block;">Go to Store</a>
+                <div style="padding: 20px; color: #8f98a0;">No games owned yet.</div>
+            {% endfor %}
+        </div>
+
+
+        <div class="main-content">
+            {% for game in games %}
+                <div id="panel-{{ game.id }}" class="game-details-panel {% if forloop.first %}active-panel{% endif %}">
+
+                    <div class="hero-banner">
+                        {% if game.image %}
+                            <img src="{{ game.image.url }}">
+                        {% else %}
+                            <div style="width:100%; height:100%; background:#222;"></div>
+                        {% endif %}
+                        <div class="hero-info">
+                            <h1 class="hero-title">{{ game.name }}</h1>
+                        </div>
+                    </div>
+
+                    <div class="action-bar" id="action-area-{{ game.id }}">
+                        <button class="btn-action-large btn-install js-install-btn" onclick="simulateInstall('{{ game.id }}')">Install</button>
+
+                        <div class="download-container js-download-bar">
+                            <div class="download-bar js-progress-fill"></div>
+                            <span class="download-text js-download-text">Downloading...</span>
+                        </div>
+
+                        <button class="btn-action-large btn-play js-play-btn" onclick="alert('Launching {{ game.name }} simulation...')">▶ PLAY</button>
+
+                        <a class="uninstall-link js-uninstall-btn" onclick="simulateUninstall('{{ game.id }}')">Uninstall</a>
+
+                        <div style="margin-left: auto; text-align: right; color: #8f98a0; font-size: 14px;">
+                            <div>Last Played: Never</div>
+                            <div class="js-status-text">Status: Not Installed</div>
+                        </div>
+                    </div>
+
+                    <div class="details-grid">
+                        <div>
+                            <h3 style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">About</h3>
+                            <p style="color: #c7d5e0; line-height: 1.6;">{{ game.description }}</p>
+                        </div>
+                        <div>
+                            <div class="stats-card">
+                                <div class="stat-label">Category</div>
+                                <div class="stat-value">{{ game.get_category_display }}</div>
+                            </div>
+                             <div class="stats-card">
+                                <div class="stat-label">Acquired</div>
+                                <div class="stat-value">Recent</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            {% empty %}
+                <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: rgba(255,255,255,0.5); font-size: 24px;">
+                    Visit the store to add games to your repository.
                 </div>
             {% endfor %}
         </div>
 
     </div>
+
+    <script>
+        // 1. SIDEBAR SWITCHING LOGIC
+        function selectGame(gameId) {
+            document.querySelectorAll('.game-list-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.game-details-panel').forEach(panel => panel.classList.remove('active-panel'));
+            document.getElementById('panel-' + gameId).classList.add('active-panel');
+        }
+
+
+        // 2. INSTALL/PLAY/UNINSTALL SIMULATION LOGIC
+
+        function getGameElements(gameId) {
+            const area = document.getElementById('action-area-' + gameId);
+            return {
+                installBtn: area.querySelector('.js-install-btn'),
+                downloadBar: area.querySelector('.js-download-bar'),
+                progressFill: area.querySelector('.js-progress-fill'),
+                downloadText: area.querySelector('.js-download-text'),
+                playBtn: area.querySelector('.js-play-btn'),
+                uninstallBtn: area.querySelector('.js-uninstall-btn'),
+                statusText: area.querySelector('.js-status-text')
+            };
+        }
+
+        // Function to update UI based on state (Installed vs Not Installed)
+        function updateUIState(gameId, isInstalled) {
+            const els = getGameElements(gameId);
+            if (isInstalled) {
+                els.installBtn.style.display = 'none';
+                els.downloadBar.style.display = 'none';
+                els.playBtn.style.display = 'block';
+                els.uninstallBtn.style.display = 'block';
+                els.statusText.textContent = 'Status: Ready to play';
+                els.statusText.style.color = '#2ed573';
+                // Ensure bar is reset for next time
+                els.progressFill.style.width = '0%';
+                els.progressFill.classList.remove('is-uninstalling');
+            } else {
+                els.installBtn.style.display = 'block';
+                els.downloadBar.style.display = 'none';
+                els.playBtn.style.display = 'none';
+                els.uninstallBtn.style.display = 'none';
+                els.statusText.textContent = 'Status: Not Installed';
+                 els.statusText.style.color = '#8f98a0';
+                 // Ensure bar is reset
+                 els.progressFill.style.width = '0%';
+                 els.progressFill.classList.remove('is-uninstalling');
+            }
+        }
+
+        // --- SIMULATE INSTALL (Blue bar fills up) ---
+        function simulateInstall(gameId) {
+            const els = getGameElements(gameId);
+            els.installBtn.style.display = 'none';
+            els.downloadBar.style.display = 'flex';
+            els.downloadText.textContent = "Downloading... (Simulation)";
+            els.statusText.textContent = 'Status: Downloading...';
+
+            // Ensure it's blue
+            els.progressFill.classList.remove('is-uninstalling');
+
+            setTimeout(() => { els.progressFill.style.width = '100%'; }, 50);
+
+            setTimeout(() => {
+                localStorage.setItem('game_installed_' + gameId, 'true');
+                updateUIState(gameId, true);
+            }, 3500);
+        }
+
+
+        // --- SIMULATE UNINSTALL (Red bar empties out) ---
+        function simulateUninstall(gameId) {
+            const els = getGameElements(gameId);
+
+            // 1. Hide Play/Uninstall UI
+            els.playBtn.style.display = 'none';
+            els.uninstallBtn.style.display = 'none';
+
+            // 2. Show Bar, make it Red, set to full width initially
+            els.downloadBar.style.display = 'flex';
+            els.progressFill.classList.add('is-uninstalling'); // Turn it red
+            els.progressFill.style.width = '100%'; // Start full
+
+            els.downloadText.textContent = "Uninstalling... removing files.";
+            els.statusText.textContent = 'Status: Uninstalling...';
+            els.statusText.style.color = '#ff4757';
+
+            // 3. Animate down to 0%
+            setTimeout(() => { els.progressFill.style.width = '0%'; }, 50);
+
+            // 4. Finish uninstall after 3 seconds
+            setTimeout(() => {
+                localStorage.removeItem('game_installed_' + gameId);
+                updateUIState(gameId, false); // Reset UI to "Install" state
+            }, 3500);
+        }
+
+
+        // ON PAGE LOAD: CHECK LOCAL STORAGE STATE
+        document.addEventListener('DOMContentLoaded', function() {
+            const gamePanels = document.querySelectorAll('.game-details-panel');
+            gamePanels.forEach(panel => {
+                const gameId = panel.id.replace('panel-', '');
+                const isInstalled = localStorage.getItem('game_installed_' + gameId) === 'true';
+                updateUIState(gameId, isInstalled);
+            });
+        });
+
+    </script>
+<footer>
+        <div class="footer-content">
+
+            <div class="footer-col">
+                <h3>About PYCRIB</h3>
+                <p>
+                    PYCRIB is a secure digital distribution platform designed to streamline game management.
+                    We provide a seamless interface for gamers to browse, purchase, and curate their libraries,
+                    while offering administrators robust tools for managing content and transactions.
+                </p>
+                <p>
+                    Bridging the gap between developers and players through efficient, transparent operations.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h3>Developed By</h3>
+                <ul class="team-list">
+                    <li>Joshua Martin A. Cadaba</li>
+                    <li>Ghrenz Aicelle V. Petil</li>
+                    <li>Daryle D. Panaglima</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Connect</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036c-2.148 0-2.971.956-2.971 3.138v.859h3.449l-.641 3.667h-2.808v7.98h-4.843Z"/></svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069ZM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0Zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881Z"/></svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-logo">PYCRIB</div>
+            <div>
+                &copy; 2025 PyCrib Corporation. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
 </body>
 </html>

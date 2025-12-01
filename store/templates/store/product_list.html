@@ -139,6 +139,51 @@
         .btn-wishlist-floating:hover { color: #ff4757; background: rgba(255, 71, 87, 0.2); transform: scale(1.1); }
         .alert { background: rgba(46, 213, 115, 0.15); border: 1px solid rgba(46, 213, 115, 0.3); color: #2ed573; padding: 15px; border-radius: 12px; text-align: center; margin: 20px auto; max-width: 960px; font-weight: 600; }
 
+        /* --- FOOTER STYLES --- */
+        footer {
+            background: #171a21; /* Deep Steam Dark */
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #8f98a0;
+            padding: 40px 20px;
+            margin-top: auto; /* Pushes footer to bottom if page is short */
+            font-size: 14px;
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr; /* 3 Columns */
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 { color: #fff; font-size: 16px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .footer-col p { line-height: 1.6; color: #8f98a0; margin-bottom: 10px; }
+
+        .team-list { list-style: none; padding: 0; }
+        .team-list li { margin-bottom: 8px; color: #c7d5e0; }
+
+        .social-icons { display: flex; gap: 15px; }
+        .social-icon {
+            width: 32px; height: 32px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+            fill: #c7d5e0; /* Icon Color */
+        }
+        .social-icon:hover { background: #66c0f4; fill: #171a21; transform: translateY(-3px); }
+        .social-icon svg { width: 18px; height: 18px; }
+
+        .footer-bottom {
+            max-width: 1100px; margin: 0 auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .footer-logo { font-weight: 800; font-size: 20px; color: #555; }
+
     </style>
 </head>
 <body>
@@ -270,6 +315,54 @@
             }, 200);
         }
     </script>
+
+<footer>
+        <div class="footer-content">
+
+            <div class="footer-col">
+                <h3>About PYCRIB</h3>
+                <p>
+                    PYCRIB is a secure digital distribution platform designed to streamline game management.
+                    We provide a seamless interface for gamers to browse, purchase, and curate their libraries,
+                    while offering administrators robust tools for managing content and transactions.
+                </p>
+                <p>
+                    Bridging the gap between developers and players through efficient, transparent operations.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h3>Developed By</h3>
+                <ul class="team-list">
+                    <li>Joshua Martin A. Cadaba</li>
+                    <li>Ghrenz Aicelle V. Petil</li>
+                    <li>Daryle D. Panaglima</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Connect</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036c-2.148 0-2.971.956-2.971 3.138v.859h3.449l-.641 3.667h-2.808v7.98h-4.843Z"/></svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069ZM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0Zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881Z"/></svg>
+                    </a>
+                    <a href="#" class="social-icon">
+                        <svg viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-logo">PYCRIB</div>
+            <div>
+                &copy; 2025 PyCrib Corporation. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
 </body>
 </html>
